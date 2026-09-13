@@ -1,6 +1,6 @@
 # Week 2 data note — AMAC healthcare access
 
-Study area: **Abuja Municipal Area Council (AMAC)**, Federal Capital Territory, Nigeria. All layers are in **EPSG:4326**. Open `qgis/amac_week2.qgz` in QGIS to view them together.
+Study area: **Abuja Municipal Area Council (AMAC)**, Federal Capital Territory, Nigeria. These four layers answer the project question — *which AMAC wards have the fewest health facilities relative to their population?* — by providing the ward units, the facilities to count, and the population to compare them against. All layers are in **EPSG:4326**. Open `qgis/amac_week2.qgz` in QGIS to view them together.
 
 ## 1. AMAC boundary
 
