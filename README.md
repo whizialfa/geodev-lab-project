@@ -7,12 +7,12 @@ This project compares health facility locations against ward-level population in
 
 ## Repository contents
 - `PROJECT_BRIEF.md` — the question, why it matters, the data needed, where each dataset comes from, and what will be built.
-- `data/` — raw and processed datasets (added as the project progresses).
-- `notebooks/` or `scripts/` — analysis code (added once the analysis stage begins).
+- `data/` — `fct_healthcare_data.zip` plus cleaned GeoPackage/GeoTIFF extracts under `data/processed/`.
+- `scripts/fetch_fct_data.py` — downloads, crops, and zips the FCT boundary, OSM health, and WorldPop layers.
 - `dashboard/` — the dashboard build (added once the analysis stage begins).
 
 ## Status
-Week 1: question and datasets confirmed. No analysis has been run yet — see `PROJECT_BRIEF.md` for the full scope and data sources.
+Week 1: question and datasets confirmed. Cleaned FCT extracts are in `data/processed/` (run `python scripts/fetch_fct_data.py` to refresh). See `PROJECT_BRIEF.md` for the full scope and data sources.
 
 ## How to use this repository
 Once the dashboard is built, this section will describe how to run it (software required, how to launch it, and where it reads data from). For now, `PROJECT_BRIEF.md` is the place to start.
