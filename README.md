@@ -1,4 +1,4 @@
-# Healthcare Access Gaps in FCT, Nigeria
+# Healthcare Access Gaps in AMAC, FCT, Nigeria
 
 A spatial analysis project examining which wards in Abuja Municipal Area Council (AMAC), FCT, Nigeria have the fewest health facilities relative to their population.
 
