@@ -8,18 +8,21 @@ This project compares GRID3 health facility locations against ward-level populat
 ## Repository contents
 - `PROJECT_BRIEF.md` — the question, why it matters, the data needed, where each dataset comes from, and what will be built.
 - `DATA_NOTE.md` — Week 2 data note: source links, feature counts, key columns, geometry types, and gaps.
-- `data/processed/` — AMAC boundary, 12 GRID3 operational wards, GRID3 health facilities, WorldPop 2020 constrained raster clipped to AMAC.
-- `data/amac_healthcare_data.zip` — the same cleaned layers in one archive.
-- `qgis/amac_week2.qgz` — QGIS project that opens the four processed layers.
+- `WEEK3_PREP_NOTE.md` — Week 3: working CRS (EPSG:32632), clip, five quality checks, path to the analysis-ready GeoPackage.
+- `data/processed/amac_analysis_ready.gpkg` — analysis-ready layers in UTM 32N: boundary, 12 wards, 249 facilities.
+- `data/processed/` — also the Week 2 4326 extracts and WorldPop raster.
+- `data/amac_healthcare_data.zip` — Week 2 archive.
+- `qgis/amac_week3.qgz` — QGIS project for the analysis-ready GeoPackage.
+- `qgis/amac_week2.qgz` — QGIS project for the Week 2 geographic layers.
 - `dashboard/` — the dashboard build (added once the analysis stage begins).
 
 ## Status
-Week 2: AMAC study area locked. GRID3 wards/facilities and WorldPop 2020 are downloaded, clipped, documented in `DATA_NOTE.md`, and packaged for QGIS.
+Week 3: layers reprojected to EPSG:32632, clipped to AMAC, saved as `data/processed/amac_analysis_ready.gpkg`. Quality checks are in `WEEK3_PREP_NOTE.md`.
 
 ## How to use this repository
 1. Clone the repo.
-2. Open `qgis/amac_week2.qgz` in QGIS (or add the files under `data/processed/` by hand).
-3. Read `DATA_NOTE.md` for sources, counts, and data-quality notes.
+2. Open `qgis/amac_week3.qgz` in QGIS, or add the three layers from `data/processed/amac_analysis_ready.gpkg`.
+3. Read `WEEK3_PREP_NOTE.md` for CRS choice, clip, and the five checks.
 
 ## Author
 Wisdom Emem Akpabio
