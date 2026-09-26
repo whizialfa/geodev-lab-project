@@ -15,7 +15,7 @@ The study area sits at about 7.3–7.6°E, 8.9–9.2°N. That longitude falls in
 | Layer | Action |
 |---|---|
 | Study boundary | Union of the ten wards, then reprojected 4326 → 32632 |
-| 10 wards | The same GRID3 ward polygons as the 15-minute Abuja maps, then reprojected |
+| 10 wards | GRID3 NGA Operational Wards v1.0 (vaccination wards), the same polygons as the 15-minute Abuja maps, then reprojected |
 | GRID3 health facilities | Reprojected, then clipped to the ten-ward outline (**259** mapped points) |
 | WorldPop 2020 constrained raster | Left in 4326 for zonal sums; ward `pop_2020` comes from the national raster |
 

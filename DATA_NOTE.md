@@ -1,5 +1,7 @@
 # Week 2 data note — AMAC healthcare access
 
+> This note records what I downloaded in Week 2, when the study area was still all of AMAC. In Week 3 the study area narrowed to ten wards (seven in AMAC, three in Bwari). See `WEEK3_PREP_NOTE.md` for that step.
+
 Study area: **Abuja Municipal Area Council (AMAC)**, Federal Capital Territory, Nigeria. These four layers answer the project question — *which AMAC wards have the fewest health facilities relative to their population?* — by providing the ward units, the facilities to count, and the population to compare them against. All layers are in **EPSG:4326**. Open `qgis/amac_week2.qgz` in QGIS to view them together.
 
 ## 1. AMAC boundary
