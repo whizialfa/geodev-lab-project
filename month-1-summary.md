@@ -1,28 +1,44 @@
 # Month 1 summary
 
-Which of the seven lived-in AMAC wards plus Bwari Area Council have the fewest mapped health facilities relative to their population?
+Which of the ten FCT wards in my 15-minute-city study have the fewest mapped health facilities relative to their population?
+
+The ten are Gwarinpa, Wuse, Nyanya, Karu, City Centre, Garki and Kabusa in AMAC, plus Kubwa, Dutse and Usuma in Bwari.
 
 ## Operation
 
-I counted **points in polygon**: a spatial join of GRID3 health facilities to the 17 study-area wards, then a count per ward and people per mapped clinic. Both layers were already in **EPSG:32632** (UTM 32N, metres). A name join would have missed the hyphen/space problem and would not have placed untagged points. A buffer would have answered “how far”, not “how many clinics per ward”. The output is `data/processed/month1_ward_facility_counts.gpkg`. The map is `maps/people_per_facility.png`. The prediction written before the run is `MONTH1_PREDICTION.md`.
+I ran **count points in polygon**: a spatial join of GRID3 health facilities to the ten wards, then a count per ward and people per mapped clinic. Both layers are in **EPSG:32632** (UTM 32N, metres). A name join would miss spelling differences (“City Center 1” vs “City Centre”) and would trust the facility’s own ward tag. A buffer answers “how far”, not “how many clinics per ward”. Output: `data/processed/month1_ward_facility_counts.gpkg`. Map: `maps/people_per_facility.png`. The prediction written before the run is `MONTH1_PREDICTION.md`.
 
 ## Expected, then got
 
-**Predicted:** 17 ward rows; about 324 facilities; the 17 counts summing to 324 if every point fell inside one polygon, with at most a handful unmatched on an edge; 0 empty geometries; Gwarinpa and Kabusa worst on people per clinic; Igu, Kawu and Shere lowest on the raw count.
+**Predicted:** 10 ward rows; about 250–270 facilities; counts summing to the facilities clipped in, with at most a handful unmatched on an edge; 0 empty geometries; Gwarinpa holding the most clinics; Kabusa and Gwarinpa worst on people per clinic (above 10,000); Karu and Nyanya best (under 3,000).
 
 **Got, checked four ways:**
 
-1. **Map.** Darkest fill is Kabusa and Gwarinpa in the south. Northern Bwari is pale. That matches the prediction that the pressure is in the large AMAC wards, not Kubwa.
-2. **Row count.** 17 ward polygons out. 324 facilities in. The 17 counts **sum to 324**. Unmatched under `within`: **0**. Matches the 17-row prediction; the leftover I allowed for (0–10) was 0.
-3. **One feature by hand.** Kubwa: join said 26 clinics. An independent `within` on the same polygon also said 26. Sample names on that polygon: Miracle Seed Clinic And Maternity, Nigeria Police Hospital, Asher Hospital Kubwa, NYSC Clinic, Oiza Clinic.
+1. **Map.** The darkest wards are Kabusa and Gwarinpa in the south-west. Nyanya and Karu in the east are palest. The Bwari satellite sits in the middle bands. That matches the prediction.
+2. **Row count.** 10 ward polygons out. 259 facilities in. The ten counts **sum to 259**. Unmatched under `within`: **0**.
+3. **One feature by hand.** Asher Hospital Kubwa sits at 9.1515°N, 7.3263°E, which is 316,088 E, 1,012,028 N in UTM 32N. GRID3 tags it Kubwa, Bwari, and the point falls inside the Kubwa polygon. Kubwa’s join count (24) also matches a separate `within` count on that polygon.
 4. **Empty geometry.** 0 empty ward polygons, 0 empty facility points, 0 invalid geometries.
 
-Kabusa is 14,493 people per mapped clinic (30 clinics, ~435,000 people). Gwarinpa is 11,417 (51 clinics, ~582,000). Igu is 1,156 (4 clinics, ~4,600 people).
+| Ward | Clinics | People (2020) | People per clinic |
+|---|---|---|---|
+| Kabusa | 30 | 434,789 | 14,493 |
+| Gwarinpa | 51 | 582,288 | 11,417 |
+| Garki | 23 | 247,312 | 10,753 |
+| Dutse | 21 | 221,209 | 10,534 |
+| Wuse | 20 | 195,387 | 9,769 |
+| City Centre | 33 | 230,486 | 6,984 |
+| Kubwa | 24 | 139,993 | 5,833 |
+| Usuma | 19 | 75,943 | 3,997 |
+| Karu | 25 | 66,173 | 2,647 |
+| Nyanya | 13 | 31,328 | 2,410 |
 
 ## What surprised me
 
-Igu and Kawu look well served on this ratio only because almost nobody lives there. Counting clinics alone would have ranked them as the gap. Relative to population they are the least pressured wards in the cut. Garki, still treated as the planned core, is 10,753 people per clinic — close to Gwarinpa — so the core is not spare capacity. Thirteen points inside the outline are tagged Tafa, Nasarawa Karu, or Gurara; they still counted because the join is spatial, not a name match.
+Gwarinpa has the **most** clinics of any ward (51) and is still the second worst, because it also holds the most people. Counting clinics alone would have called it well served. Dutse, in Bwari, is almost as pressured as Garki, which is still thought of as the planned core. Eleven points inside the outline are tagged Tafa or Karu (Nasarawa) in GRID3; the join counted them because it goes by location, not by the tag.
 
 ## Data I still need
 
-Walking distances, not just a headcount: a street network in the same CRS so I can ask how far people are from a clinic, not only how many clinics sit in the ward. A completeness check on the 25 Bwari records with no coordinates, and on the 265 AMAC-tagged records that never mapped. A later population vintage than WorldPop 2020 if the dashboard is meant to stay current. Facility type filled in for the 30 blank rows, so primary care can be separated from other sites.
+- A street network in the same CRS, so I can measure how far people walk to a clinic rather than how many clinics sit in their ward.
+- Coordinates for the 265 AMAC and 25 Bwari GRID3 records that never mapped.
+- A newer population layer than WorldPop 2020 if the dashboard is meant to stay current.
+- Facility type filled in for the 25 blank rows, so primary care can be separated from other sites.

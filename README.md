@@ -13,7 +13,7 @@ This project compares GRID3 health facility locations against ward-level populat
 - `month-1-summary.md` — Month 1: question, operation, expected vs got, four checks, surprise, data still needed.
 - `data/processed/month1_ward_facility_counts.gpkg` — spatial join counts and people per clinic, EPSG:32632.
 - `maps/people_per_facility.png` — A3 map of people per mapped clinic by ward (title, legend, north arrow, scale bar).
-- `data/processed/amac_analysis_ready.gpkg` — analysis-ready layers in UTM 32N: seven AMAC plate wards plus ten Bwari wards, 324 facilities.
+- `data/processed/amac_analysis_ready.gpkg` — analysis-ready layers in UTM 32N: the ten 15-minute FCT wards (seven AMAC, three Bwari), 259 facilities.
 - `data/processed/` — also the Week 2 4326 extracts and WorldPop raster.
 - `data/amac_healthcare_data.zip` — Week 2 archive.
 - `qgis/amac_week3.qgz` — QGIS project for the analysis-ready GeoPackage.
@@ -21,7 +21,7 @@ This project compares GRID3 health facility locations against ward-level populat
 - `dashboard/` — the dashboard build (added once the analysis stage begins).
 
 ## Status
-Month 1: counted facilities per ward in EPSG:32632. Result, map, and four checks are in `month-1-summary.md`.
+Month 1: counted facilities in the ten 15-minute FCT wards in EPSG:32632. Result, map, and four checks are in `month-1-summary.md`.
 
 ## How to use this repository
 1. Clone the repo.
