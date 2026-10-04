@@ -61,3 +61,7 @@ People-per-clinic treats each ward as sealed off, but a Gwarinpa resident can us
 
 ## Author
 Wisdom Emem Akpabio
+
+## Month 2: development environment and early Python
+
+Week 5: set up Python, VS Code and the terminal. hello.py runs.
