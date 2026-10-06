@@ -65,3 +65,5 @@ Wisdom Emem Akpabio
 ## Month 2: development environment and early Python
 
 Week 5: set up Python, VS Code and the terminal. hello.py runs.
+
+Week 6: set up the project with uv and added pandas. check.py prints the pandas version.

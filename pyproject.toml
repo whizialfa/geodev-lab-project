@@ -1,0 +1,8 @@
+[project]
+name = "geodev-lab-project"
+version = "0.1.0"
+description = "Month 1 repository, with the Week 6 uv environment"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas",
+]
