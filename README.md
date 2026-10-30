@@ -71,3 +71,9 @@ Week 6: set up the project with uv and added pandas. check.py prints the pandas 
 Week 7: analyse.py reads wards.csv, converts each area and classifies each ward.
 
 Week 8: inspect_data.py summarises pop_2020 and n_facilities in my Abuja ward healthcare data.
+
+Week 9: summary.py refactors the inspection into functions and summarises pop_2020 and n_facilities.
+
+## Month 2 reflection
+
+The idea that finally clicked this month is that a function which prints is not the same as a function which returns. For weeks I treated the screen as the result; `summarise_all` only worked when `read_rows`, `clean_values` and `summarise_values` each handed a value to the next step. Dictionaries are still a bit fuzzy: I can build a report, but I still have to pause over `.items()` when I print it. The capstone says the same thing as the Month 1 map, in numbers: the ten Abuja wards average about 222,000 people and 26 clinics, yet Gwarinpa has 582,000 people and Nyanya 31,000, so clinic counts on their own would have hidden the pressure.
