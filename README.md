@@ -64,6 +64,16 @@ Wisdom Emem Akpabio
 
 ## Month 2: development environment and early Python
 
+Month 2 is the same ten-ward healthcare project, now in Python. The capstone summarises `pop_2020` and `n_facilities` from [abujawards.csv](abujawards.csv), the Month 1 ward table, not the practice `wards.csv`.
+
+| Week | What I did | Where it is |
+|---|---|---|
+| 5 | Set up Python, VS Code and the terminal. hello.py runs. | [hello.py](hello.py) · [screenshots/week5.png](screenshots/week5.png) |
+| 6 | Set up the project with uv and added pandas. check.py prints the pandas version. | [pyproject.toml](pyproject.toml) · [uv.lock](uv.lock) · [check.py](check.py) · [screenshots/week6.png](screenshots/week6.png) |
+| 7 | analyse.py reads wards.csv, converts each area and classifies each ward. | [wards.csv](wards.csv) · [analyse.py](analyse.py) · [screenshots/week7.png](screenshots/week7.png) |
+| 8 | inspect_data.py summarises pop_2020 and n_facilities in my Abuja ward healthcare data. | [abujawards.csv](abujawards.csv) · [inspect_data.py](inspect_data.py) · [screenshots/week8.png](screenshots/week8.png) |
+| 9 | summary.py refactors the inspection into functions and summarises pop_2020 and n_facilities. | [summary.py](summary.py) · [screenshots/week9.png](screenshots/week9.png) |
+
 Week 5: set up Python, VS Code and the terminal. hello.py runs.
 
 Week 6: set up the project with uv and added pandas. check.py prints the pandas version.
