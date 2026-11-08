@@ -87,3 +87,7 @@ Week 9: summary.py refactors the inspection into functions and summarises pop_20
 ## Month 2 reflection
 
 The idea that finally clicked this month is that a function which prints is not the same as a function which returns. For weeks I treated the screen as the result; `summarise_all` only worked when `read_rows`, `clean_values` and `summarise_values` each handed a value to the next step. Dictionaries are still a bit fuzzy: I can build a report, but I still have to pause over `.items()` when I print it. The capstone says the same thing as the Month 1 map, in numbers: the ten Abuja wards average about 222,000 people and 26 clinics, yet Gwarinpa has 582,000 people and Nyanya 31,000, so clinic counts on their own would have hidden the pressure.
+
+## Month 3: geospatial Python and automation
+
+- Week 10: GeoPandas. Loaded, checked, joined and mapped my amac_wards layer in code.

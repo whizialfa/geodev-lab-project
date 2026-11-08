@@ -1,2 +1,6 @@
 .venv/
 main.py
+*.tif
+*.zip
+__pycache__/
+.DS_Store
