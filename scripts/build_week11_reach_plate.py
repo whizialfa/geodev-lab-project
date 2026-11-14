@@ -81,7 +81,7 @@ CAPTION = (
     "Light sand is within that reach. "
     "Clinics without coordinates are missing, so gaps here are a floor on how far people sit from care."
 )
-PINNED = ("Kabusa", "Gwarinpa", "Garki 1", "Wuse", "Karu", "Nyanya 1", "City Center 1")
+PINNED = ("Kabusa", "Gwarinpa", "Garki", "Wuse", "Karu", "Nyanya", "City Center")
 INSET_N = 5
 INSET_W = 78.0
 INSET_H = 48.0
