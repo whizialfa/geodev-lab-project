@@ -1,0 +1,14 @@
+---
+description: All maps and plates use headless QGIS (PyQGIS), never matplotlib geography
+alwaysApply: true
+---
+
+# Maps: headless QGIS only
+
+Whenever Wisdom asks for a map, plate, map PNG, map PDF, or anything geographic on a page:
+
+1. Read `publication-maps` (user store or the project's `.cursor/skills/publication-maps/SKILL.md`) before drawing.
+2. Build the figure with **headless QGIS / PyQGIS** print layout. Run with QGIS's `python3.9` and `env -u PYTHONPATH`.
+3. **Never** ship matplotlib, Cartopy, GeoPandas `.plot()`, canvas dumps, or screenshot-plus-painted-legend geography. Charts (bars, lines, flowcharts) may stay in matplotlib; geography does not.
+4. Full house furniture inside the neatline: title box, north, legend, three-sentence footnote, scale, `©Wisdom Akpabio`. Open the PNG and check it before showing him.
+5. This applies to paper replicas, Odin cue sheets, GeoDev Lab course maps, and any other project. Course “quick check” map language in a learning pack does not override this house rule.

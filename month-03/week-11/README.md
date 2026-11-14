@@ -8,8 +8,9 @@ I used **EPSG:32632** (WGS 84 / UTM zone 32N) for the AMAC challenge. `estimate_
 
 - Eight guided scripts on the Ibadan North teaching data (wrong vs right area, set_crs vs to_crs, one-point transform, buffer/count, coverage gap, nearest, clip/dissolve, fix geometry)
 - Challenge scripts on AMAC wards and GRID3 facilities: `my_crs.py`, `my_count.py`, `my_reach.py`, `my_validity.py`
-- `my_reach.png`: AMAC wards with areas more than 2 km from a mapped facility highlighted
+- `my_reach.png`: A3 QGIS plate of AMAC 2 km facility reach (built with headless PyQGIS, not matplotlib)
 - Result layers in `data/processed/week11_amac_reach.gpkg` and `week11_amac_wards_valid.gpkg`
+- Plate script: `scripts/build_week11_reach_plate.py`
 
 ## How to run it
 
