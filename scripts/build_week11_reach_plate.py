@@ -193,20 +193,22 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     settings.fieldName = "ward"
     settings.placement = Qgis.LabelPlacement.OverPoint
     settings.centroidInside = True
-    settings.displayAll = False
+    settings.displayAll = True
     settings.obstacle = False
     settings.setUnplacedVisibility(Qgis.UnplacedLabelVisibility.NeverShow)
-    settings.placementSettings().setOverlapHandling(Qgis.LabelOverlapHandling.PreventOverlap)
+    settings.placementSettings().setOverlapHandling(Qgis.LabelOverlapHandling.AllowOverlapAtNoCost)
     fmt = QgsTextFormat()
-    fmt.setFont(QFont("Helvetica", 11))
-    fmt.setSize(11)
+    font = QFont("Helvetica", 13, QFont.Bold)
+    fmt.setFont(font)
+    fmt.setSize(13)
     fmt.setSizeUnit(QgsUnitTypes.RenderPoints)
-    fmt.setColor(QColor(55, 50, 46))
+    fmt.setColor(QColor(28, 28, 28))
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(1.0)
+    buf.setSize(1.6)
     buf.setSizeUnit(QgsUnitTypes.RenderMillimeters)
-    buf.setColor(QColor(250, 250, 250))
+    buf.setColor(QColor(255, 255, 255))
+    buf.setOpacity(0.95)
     fmt.setBuffer(buf)
     settings.setFormat(fmt)
     pins = ",".join(f"'{n}'" for n in PINNED)
