@@ -76,8 +76,8 @@ TITLE = "HEALTH REACH IN AMAC"
 SUBTITLE = "Areas more than 2 km from a clinic"
 LEGEND_TITLE = "2 km straight-line reach"
 CAPTION = (
-    "Red shows parts of AMAC more than 2 km in a straight line from a mapped GRID3 health facility. "
-    "Pale teal is within that reach. "
+    "Warm shading shows parts of AMAC more than 2 km in a straight line from a mapped GRID3 health facility. "
+    "Light sand is within that reach. "
     "Clinics without coordinates are missing, so gaps here are a floor on how far people sit from care."
 )
 PINNED = ("Kabusa", "Gwarinpa", "Garki 1", "Wuse", "Karu", "Nyanya 1", "City Center 1")
@@ -298,13 +298,14 @@ def main() -> Path:
         if not lyr.isValid():
             raise RuntimeError(f"layer failed to load: {lyr.name()}")
 
+    # Quiet sequential pair: sand for reach, dusty rose for gaps. No primary red/green fight.
     wards.setRenderer(
         QgsSingleSymbolRenderer(
             QgsFillSymbol.createSimple(
                 {
-                    "color": "166,206,227,204",
-                    "outline_color": "90,84,78,165",
-                    "outline_width": "0.22",
+                    "color": "232,226,214,170",
+                    "outline_color": "120,114,108,140",
+                    "outline_width": "0.18",
                     "outline_width_unit": "MM",
                 }
             )
@@ -314,9 +315,9 @@ def main() -> Path:
         QgsSingleSymbolRenderer(
             QgsFillSymbol.createSimple(
                 {
-                    "color": "179,0,0,210",
-                    "outline_color": "120,0,0,180",
-                    "outline_width": "0.15",
+                    "color": "180,120,118,175",
+                    "outline_color": "140,95,93,120",
+                    "outline_width": "0.12",
                     "outline_width_unit": "MM",
                 }
             )
@@ -327,10 +328,10 @@ def main() -> Path:
             QgsMarkerSymbol.createSimple(
                 {
                     "name": "circle",
-                    "color": "9,73,35,240",
-                    "outline_color": "255,255,255,230",
-                    "outline_width": "0.28",
-                    "size": "1.8",
+                    "color": "46,64,87,220",
+                    "outline_color": "255,255,255,200",
+                    "outline_width": "0.22",
+                    "size": "1.5",
                     "size_unit": "MM",
                 }
             )
