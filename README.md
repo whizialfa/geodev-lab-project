@@ -91,3 +91,4 @@ The idea that finally clicked this month is that a function which prints is not 
 ## Month 3: geospatial Python and automation
 
 - Week 10: GeoPandas. Loaded, checked, joined and mapped my amac_wards layer in code.
+- Week 11: CRS and spatial operations. Reprojected to EPSG:32632 and measured AMAC ward areas and 2 km facility reach gaps.
