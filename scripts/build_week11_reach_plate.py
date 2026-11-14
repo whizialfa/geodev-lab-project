@@ -82,24 +82,6 @@ CAPTION = (
     "Clinics without coordinates are missing, so gaps here are a floor on how far people sit from care."
 )
 PINNED = ("Kabusa", "Gwarinpa", "Garki", "Wuse", "Karu", "Nyanya", "City Center")
-INSET_N = 5
-INSET_W = 78.0
-INSET_H = 48.0
-
-
-def _worst_wards_text(layer: QgsVectorLayer, n: int = INSET_N) -> str:
-    rows = []
-    for feat in layer.getFeatures():
-        pct = feat["uncovered_pct"]
-        if pct is None:
-            continue
-        rows.append((float(pct), str(feat["ward"])))
-    rows.sort(reverse=True)
-    lines = ["Largest gaps", f"{'Ward':<14} {'Beyond 2 km':>10}"]
-    for pct, name in rows[:n]:
-        short = name if len(name) <= 14 else name[:13] + "…"
-        lines.append(f"{short:<14} {pct:9.1f}%")
-    return "\n".join(lines)
 
 
 def _place(layout, item, x, y, w=None, h=None) -> None:
@@ -437,19 +419,6 @@ def main() -> Path:
     title.setZValue(21)
     _place(layout, title, FRAME_X, FRAME_Y, TITLE_W, TITLE_H)
 
-    inset_x = FRAME_X
-    inset_y = FRAME_Y + TITLE_H + GAP
-    inset_panel = _white_box(layout, inset_x, inset_y, INSET_W, INSET_H)
-    inset = QgsLayoutItemLabel(layout)
-    inset.setText(_worst_wards_text(wards))
-    inset.setFont(QFont("Menlo", 9, QFont.Bold))
-    inset.setFontColor(QColor(0, 0, 0))
-    inset.setHAlign(Qt.AlignLeft)
-    inset.setVAlign(Qt.AlignTop)
-    inset.setMargin(3.0)
-    inset.setZValue(21)
-    _place(layout, inset, inset_x, inset_y, INSET_W, INSET_H)
-
     north = QgsLayoutItemPicture(layout)
     north.setMode(QgsLayoutItemPicture.FormatSVG)
     north.setPicturePath(str(NORTH_SVG))
@@ -528,7 +497,6 @@ def main() -> Path:
 
     boxes = [
         _item_box(title_panel),
-        _item_box(inset_panel),
         _item_box(north),
         _grow(_item_box(legend), BOTTOM_CLEAR),
         _grow(_item_box(note_panel), BOTTOM_CLEAR),
