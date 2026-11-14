@@ -302,7 +302,7 @@ def main() -> Path:
         QgsSingleSymbolRenderer(
             QgsFillSymbol.createSimple(
                 {
-                    "color": "230,242,243,180",
+                    "color": "166,206,227,204",
                     "outline_color": "90,84,78,165",
                     "outline_width": "0.22",
                     "outline_width_unit": "MM",
