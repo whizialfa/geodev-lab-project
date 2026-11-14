@@ -42,13 +42,14 @@ from qgis.core import (  # noqa: E402
     QgsRectangle,
     QgsScaleBarSettings,
     QgsSingleSymbolRenderer,
+    QgsTextBackgroundSettings,
     QgsTextBufferSettings,
     QgsTextFormat,
     QgsUnitTypes,
     QgsVectorLayer,
     QgsVectorLayerSimpleLabeling,
 )
-from qgis.PyQt.QtCore import Qt  # noqa: E402
+from qgis.PyQt.QtCore import QSizeF, Qt  # noqa: E402
 from qgis.PyQt.QtGui import QColor, QFont  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -198,18 +199,27 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     settings.setUnplacedVisibility(Qgis.UnplacedLabelVisibility.NeverShow)
     settings.placementSettings().setOverlapHandling(Qgis.LabelOverlapHandling.AllowOverlapAtNoCost)
     fmt = QgsTextFormat()
-    font = QFont("Helvetica", 15, QFont.Bold)
+    font = QFont("Helvetica", 14, QFont.Bold)
     fmt.setFont(font)
-    fmt.setSize(15)
+    fmt.setSize(14)
     fmt.setSizeUnit(QgsUnitTypes.RenderPoints)
     fmt.setColor(QColor(20, 20, 20))
-    # Cream halo: white disappears on the sand fill; this stays readable on sand and rose.
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(2.2)
+    buf.setSize(1.2)
     buf.setSizeUnit(QgsUnitTypes.RenderMillimeters)
     buf.setColor(QColor(252, 248, 240))
     fmt.setBuffer(buf)
+    # Soft pill behind each name so sand and rose both leave the type readable.
+    bg = QgsTextBackgroundSettings()
+    bg.setEnabled(True)
+    bg.setType(QgsTextBackgroundSettings.ShapeRectangle)
+    bg.setFillColor(QColor(252, 248, 240, 220))
+    bg.setStrokeWidth(0)
+    bg.setSizeType(QgsTextBackgroundSettings.SizeBuffer)
+    bg.setSize(QSizeF(1.6, 0.9))
+    bg.setRadii(QSizeF(1.2, 1.2))
+    fmt.setBackground(bg)
     settings.setFormat(fmt)
     pins = ",".join(f"'{n}'" for n in PINNED)
     settings.dataDefinedProperties().setProperty(
