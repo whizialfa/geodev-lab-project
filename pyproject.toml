@@ -7,4 +7,6 @@ dependencies = [
     "geopandas>=1.2.0",
     "matplotlib>=3.11.2",
     "pandas",
+    "rasterio>=1.4.4",
+    "rasterstats>=0.21.0",
 ]

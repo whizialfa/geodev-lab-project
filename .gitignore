@@ -4,3 +4,7 @@ main.py
 *.zip
 __pycache__/
 .DS_Store
+
+# Week 12 rasters stay local
+data/raw/week12/
+data/raw/week12_amac/

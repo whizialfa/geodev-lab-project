@@ -92,3 +92,4 @@ The idea that finally clicked this month is that a function which prints is not 
 
 - Week 10: GeoPandas. Loaded, checked, joined and mapped my amac_wards layer in code.
 - Week 11: CRS and spatial operations. Reprojected to EPSG:32632 and measured AMAC ward areas and 2 km facility reach gaps.
+- Week 12: Rasters. Computed NDVI for central Abuja (AMAC study wards) and summarised it per ward.
