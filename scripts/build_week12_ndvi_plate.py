@@ -206,11 +206,10 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     fmt.setColor(QColor(20, 20, 20))
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(0.15)
-    buf.setSizeUnit(QgsUnitTypes.RenderMillimeters)
+    buf.setSize(1.0)
+    buf.setSizeUnit(QgsUnitTypes.RenderPoints)
     buf.setColor(QColor(255, 255, 255))
     fmt.setBuffer(buf)
-    # No cream pill — thin white halo only.
     bg = QgsTextBackgroundSettings()
     bg.setEnabled(False)
     fmt.setBackground(bg)
@@ -343,8 +342,8 @@ def main() -> Path:
             QgsFillSymbol.createSimple(
                 {
                     "color": "0,0,0,0",
-                    "outline_color": "40,40,40,255",
-                    "outline_width": "0.65",
+                    "outline_color": "70,70,70,220",
+                    "outline_width": "0.28",
                     "outline_width_unit": "MM",
                 }
             )
