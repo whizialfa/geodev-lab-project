@@ -22,7 +22,8 @@ Rasters are not in git. See [data-notes.md](data-notes.md).
 **Challenge (AMAC)**
 
 - `my_inspect.py` — Landsat red band + Copernicus DEM metadata
-- `my_index.py` — NDVI for the study wards → `my_map.png`
+- `my_index.py` — NDVI for the study wards, **clipped to ward polygons** (not a bbox)
+- `scripts/build_week12_ndvi_plate.py` — A3 QGIS plate → `my_map.png` (not matplotlib)
 - `my_zonal.py` — mean NDVI per ward → `zonal_stats.csv`
 
 ## How to run
@@ -41,6 +42,7 @@ uv run month-03/week-12/zonal_stats.py
 uv run month-03/week-12/reproject_raster.py
 uv run month-03/week-12/my_inspect.py
 uv run month-03/week-12/my_index.py
+env -u PYTHONPATH /Applications/QGIS.app/Contents/MacOS/bin/python3.9 scripts/build_week12_ndvi_plate.py
 uv run month-03/week-12/my_zonal.py
 ```
 

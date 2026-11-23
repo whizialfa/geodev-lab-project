@@ -7,8 +7,8 @@ alwaysApply: true
 
 Whenever Wisdom asks for a map, plate, map PNG, map PDF, or anything geographic on a page:
 
-1. Read `publication-maps` (user store or the project's `.cursor/skills/publication-maps/SKILL.md`) before drawing.
-2. Build the figure with **headless QGIS / PyQGIS** print layout. Run with QGIS's `python3.9` and `env -u PYTHONPATH`.
-3. **Never** ship matplotlib, Cartopy, GeoPandas `.plot()`, canvas dumps, or screenshot-plus-painted-legend geography. Charts (bars, lines, flowcharts) may stay in matplotlib; geography does not.
-4. Full house furniture inside the neatline: title box, north, legend, three-sentence footnote, scale, `©Wisdom Akpabio`. Open the PNG and check it before showing him.
-5. This applies to paper replicas, Odin cue sheets, GeoDev Lab course maps, and any other project. Course “quick check” map language in a learning pack does not override this house rule.
+1. Read `publication-maps` before drawing.
+2. Build with **headless QGIS / PyQGIS**. Run with QGIS's `python3.9` and `env -u PYTHONPATH`.
+3. **Never** matplotlib / GeoPandas geography for map deliverables.
+4. **Clip rasters to the study ward (or project) polygons**, not a bbox.
+5. Full furniture inside the neatline; open the PNG before showing him.

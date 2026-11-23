@@ -19,7 +19,7 @@ Rasters stay on this laptop (see root `.gitignore` for `*.tif`). Nothing below i
 |---|---|---|---|
 | `B4_red.tif` | Landsat-9 C2 L2 Band 4 (red), windowed to study wards | Planetary Computer STAC `landsat-c2-l2` | Scene **LC09_L2SP_189054_20241108_02_T1**, date **2024-11-08**, cloud cover **0.0%**, WRS 189/054, CRS EPSG:32632 |
 | `B5_nir.tif` | Landsat-9 C2 L2 Band 5 (NIR) | same scene | Same window and CRS as B4 |
-| `ndvi_amac.tif` | NDVI = (NIR−Red)/(NIR+Red) after scale 0.0000275 and offset −0.2 | computed by `my_index.py` | Local output |
+| `ndvi_amac.tif` | NDVI = (NIR−Red)/(NIR+Red) after scale 0.0000275 and offset −0.2, **masked to the ten study ward polygons** | computed by `my_index.py` | Local output; outside wards is nodata |
 | `dem_amac.tif` | Copernicus GLO-30 DEM mosaic clipped to ward bbox | Planetary Computer `cop-dem-glo-30` | EPSG:4326; inspected in `my_inspect.py` |
 | `scene_meta.json` | Scene id, date, cloud cover | STAC properties | Helper; not required for marking |
 
