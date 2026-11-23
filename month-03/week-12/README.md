@@ -1,29 +1,35 @@
 # Week 12: rasters with Rasterio
 
-## Scene
+## Teaching scene (guided)
 
-- **Scene:** LC09_L2SP_189054_20241108_02_T1 (Landsat-9 Collection 2 Level-2)
+- **Scene:** LC09_L2SP_191055_20260115_20260117_02_T1 (Landsat-9 Collection 2 Level-2)
+- **Date:** 2026-01-15
+- **Path/row:** 191 / 055
+- **Area:** Ibadan North (pack DEM + wards)
+
+## Challenge scene (AMAC)
+
+- **Scene:** LC09_L2SP_189054_20241108_02_T1
 - **Date:** 2024-11-08
 - **Cloud cover:** 0.0%
 - **Path/row:** 189 / 054
-- **CRS of clipped bands:** EPSG:32632 (same as the AMAC project)
+- **CRS:** EPSG:32632
 
 Rasters are not in git. See [data-notes.md](data-notes.md).
 
 ## What this folder contains
 
-**Guided (teaching DEM + scene)**
+**Guided (pack teaching data)**
 
 - `inspect_raster.py`, `read_values.py`, `pixel_coords.py`, `sample_points.py`
 - `ndvi.py`, `plot_raster.py` → `ndvi_map.png`
-- `clip_raster.py`, `zonal_stats.py` → `teaching_zonal_stats.csv`
-- `reproject_raster.py`
+- `clip_raster.py`, `zonal_stats.py`, `reproject_raster.py`
 
-**Challenge (AMAC)**
+**Challenge (AMAC Months 1–2 data)**
 
-- `my_inspect.py` — Landsat red band + Copernicus DEM metadata
-- `my_index.py` — NDVI for the study wards, **clipped to ward polygons** (not a bbox)
-- `scripts/build_week12_ndvi_plate.py` — A3 QGIS plate → `my_map.png` (not matplotlib)
+- `my_inspect.py` — Landsat red + Copernicus DEM
+- `my_index.py` — NDVI clipped to study ward polygons
+- `scripts/build_week12_ndvi_plate.py` — A3 QGIS plate → `my_map.png`
 - `my_zonal.py` — mean NDVI per ward → `zonal_stats.csv`
 
 ## How to run
@@ -48,8 +54,8 @@ uv run month-03/week-12/my_zonal.py
 
 ## What I found
 
-On 8 November 2024 (cloud-free), mean NDVI is highest in Dutse and Kabusa and lowest in Usuma and Nyanya among the ten study wards. Built-up central wards sit in the middle. The map is greenness, not a clinic map — it sits beside the people-per-clinic story as a land-cover context layer.
+On the pack Ibadan North scene, NDVI separates vegetated cells from built ground after the Collection 2 scale/offset. On AMAC (8 Nov 2024, cloud-free), ward mean NDVI is highest in Dutse and Kabusa and lowest in Usuma and Nyanya.
 
 ## Limitation
 
-NDVI at 30 m mixes roofs, trees and bare ground in one cell. Collection 2 scale/offset and a simple 0–1 reflectance mask are used; no full QA_PIXEL cloud mask was applied beyond choosing a 0% cloud scene.
+Guided Landsat bands are the pack’s clipped window, not a full scene. AMAC NDVI is clipped to the ten study wards; 30 m cells still mix roofs and trees.

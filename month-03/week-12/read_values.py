@@ -1,15 +1,12 @@
-"""Guided: compare raw vs masked means on the teaching DEM."""
-from pathlib import Path
-
+"""Guided: read DEM values with and without nodata masked."""
 import rasterio
 
-DEM = Path("data/raw/week12/dem.tif")
-
-with rasterio.open(DEM) as src:
-    raw = src.read(1)
-    masked = src.read(1, masked=True)
-
-print("raw minimum:", raw.min())
-print("mean with NoData included:", round(float(raw.mean()), 1))
-print("mean with NoData masked:", round(float(masked.mean()), 1))
-print("valid cells:", masked.count(), "of", masked.size)
+with rasterio.open("data/raw/dem.tif") as src:
+    elevation = src.read(1)
+    print("Array shape:", elevation.shape)
+    print("Smallest value:", elevation.min())
+    elevation = src.read(1, masked=True)
+    print("Smallest real value:", round(float(elevation.min()), 1))
+    print("Largest:", round(float(elevation.max()), 1))
+    print("Mean:", round(float(elevation.mean()), 1))
+    print("Nodata cells:", int(elevation.mask.sum()))
