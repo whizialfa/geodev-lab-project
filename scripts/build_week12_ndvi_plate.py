@@ -206,7 +206,7 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     fmt.setColor(QColor(20, 20, 20))
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(1.0)
+    buf.setSize(2.0)
     buf.setSizeUnit(QgsUnitTypes.RenderPoints)
     buf.setColor(QColor(255, 255, 255))
     fmt.setBuffer(buf)
