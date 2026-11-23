@@ -209,18 +209,18 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     fmt.setColor(QColor(20, 20, 20))
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(0.7)
+    buf.setSize(0.35)
     buf.setSizeUnit(QgsUnitTypes.RenderMillimeters)
     buf.setColor(QColor(252, 248, 240))
     fmt.setBuffer(buf)
     bg = QgsTextBackgroundSettings()
     bg.setEnabled(True)
     bg.setType(QgsTextBackgroundSettings.ShapeRectangle)
-    bg.setFillColor(QColor(252, 248, 240, 210))
+    bg.setFillColor(QColor(252, 248, 240, 170))
     bg.setStrokeWidth(0)
     bg.setSizeType(QgsTextBackgroundSettings.SizeBuffer)
-    bg.setSize(QSizeF(0.9, 0.45))
-    bg.setRadii(QSizeF(0.8, 0.8))
+    bg.setSize(QSizeF(0.35, 0.18))
+    bg.setRadii(QSizeF(0.4, 0.4))
     fmt.setBackground(bg)
     settings.setFormat(fmt)
     pins = ",".join(f"'{n}'" for n in PINNED)
@@ -237,15 +237,14 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
 def _style_ndvi(layer: QgsRasterLayer) -> None:
     shader = QgsRasterShader()
     ramp = QgsColorRampShader()
-    ramp.setColorRampType(QgsColorRampShader.Interpolated)
-    # Soft RdYlGn; keep nodata transparent via renderer defaults.
+    # Discrete classes → short range-only legend rows (house style).
+    ramp.setColorRampType(QgsColorRampShader.Discrete)
     items = [
-        QgsColorRampShader.ColorRampItem(-0.2, QColor(165, 0, 38), "−0.2"),
-        QgsColorRampShader.ColorRampItem(0.0, QColor(215, 48, 39), "0"),
-        QgsColorRampShader.ColorRampItem(0.2, QColor(254, 224, 139), "0.2"),
-        QgsColorRampShader.ColorRampItem(0.4, QColor(166, 217, 106), "0.4"),
-        QgsColorRampShader.ColorRampItem(0.6, QColor(26, 152, 80), "0.6"),
-        QgsColorRampShader.ColorRampItem(0.8, QColor(0, 104, 55), "0.8"),
+        QgsColorRampShader.ColorRampItem(0.0, QColor(215, 48, 39), "≤ 0"),
+        QgsColorRampShader.ColorRampItem(0.2, QColor(254, 224, 139), "0–0.2"),
+        QgsColorRampShader.ColorRampItem(0.4, QColor(166, 217, 106), "0.2–0.4"),
+        QgsColorRampShader.ColorRampItem(0.6, QColor(26, 152, 80), "0.4–0.6"),
+        QgsColorRampShader.ColorRampItem(1.0, QColor(0, 104, 55), "> 0.6"),
     ]
     ramp.setColorRampItemList(items)
     shader.setRasterShaderFunction(ramp)
@@ -262,16 +261,18 @@ def _legend(layout, map_item, ndvi, wards) -> QgsLayoutItemLegend:
     legend.setTitle(LEGEND_TITLE)
     legend.setTitleAlignment(Qt.AlignLeft)
     legend.setStyleFont(QgsLegendStyle.Title, QFont("Arial", 13, QFont.Bold))
-    legend.setStyleFont(QgsLegendStyle.Subgroup, QFont("Arial", 12))
+    legend.setStyleFont(QgsLegendStyle.Subgroup, QFont("Arial", 11))
     legend.setStyleFont(QgsLegendStyle.SymbolLabel, QFont("Arial", 12))
     legend.setFontColor(QColor(0, 0, 0))
-    legend.setSymbolWidth(5.2)
-    legend.setSymbolHeight(4.2)
+    legend.setSymbolWidth(4.8)
+    legend.setSymbolHeight(3.6)
     legend.setBoxSpace(2.5)
-    legend.setLineSpacing(0.2)
-    legend.setStyleMargin(QgsLegendStyle.Title, QgsLegendStyle.Bottom, 1.1)
-    legend.setStyleMargin(QgsLegendStyle.Symbol, 0.3)
-    legend.setStyleMargin(QgsLegendStyle.SymbolLabel, QgsLegendStyle.Left, 1.2)
+    legend.setColumnSpace(0)
+    legend.setLineSpacing(0.05)
+    legend.setStyleMargin(QgsLegendStyle.Title, QgsLegendStyle.Bottom, 0.8)
+    legend.setStyleMargin(QgsLegendStyle.Symbol, 0.15)
+    legend.setStyleMargin(QgsLegendStyle.SymbolLabel, QgsLegendStyle.Left, 1.0)
+    legend.setStyleMargin(QgsLegendStyle.Group, QgsLegendStyle.Top, 0.4)
     legend.setFrameEnabled(True)
     legend.setFrameStrokeColor(QColor(0, 0, 0))
     legend.setFrameStrokeWidth(QgsLayoutMeasurement(0.45, MM))
@@ -281,24 +282,25 @@ def _legend(layout, map_item, ndvi, wards) -> QgsLayoutItemLegend:
     root = legend.model().rootGroup()
     for child in list(root.children()):
         root.removeChildNode(child)
-    for lyr in (ndvi, wards):
-        node = root.addLayer(lyr)
-        QgsLegendRenderer.setNodeLegendStyle(node, QgsLegendStyle.Hidden)
+    # NDVI classes only; ward lines stay on the map without a legend row.
+    node = root.addLayer(ndvi)
+    QgsLegendRenderer.setNodeLegendStyle(node, QgsLegendStyle.Hidden)
     legend.setZValue(20)
     layout.addLayoutItem(legend)
     pad = float(legend.boxSpace())
-    target_w = 58.0
-    target_h = 2.0 * pad + 6.4 + 6 * (float(legend.symbolHeight()) + 1.05)
+    rows = 5
+    target_w = 42.0
+    target_h = 2.0 * pad + 5.5 + rows * (float(legend.symbolHeight()) + 0.85)
     legend.setResizeToContents(True)
     legend.setReferencePoint(QgsLayoutItem.UpperLeft)
-    legend.attemptMove(QgsLayoutPoint(14.0, 180.0, MM))
+    legend.attemptMove(QgsLayoutPoint(14.0, 200.0, MM))
     legend.attemptResize(QgsLayoutSize(target_w, target_h, MM))
     legend.refresh()
     legend.adjustBoxSize()
     measured = legend.sizeWithUnits()
     mw, mh = float(measured.width()), float(measured.height())
-    w = mw if 40.0 <= mw <= target_w + 12.0 else target_w
-    h = min(mh if 24.0 <= mh <= target_h + 8.0 else target_h, target_h + 4.0)
+    w = mw if 32.0 <= mw <= target_w + 6.0 else target_w
+    h = mh if 22.0 <= mh <= target_h + 3.0 else target_h
     legend.setResizeToContents(False)
     legend.setReferencePoint(QgsLayoutItem.LowerLeft)
     legend.attemptResize(QgsLayoutSize(w, h, MM))
@@ -338,8 +340,8 @@ def main() -> Path:
             QgsFillSymbol.createSimple(
                 {
                     "color": "0,0,0,0",
-                    "outline_color": "90,90,90,200",
-                    "outline_width": "0.22",
+                    "outline_color": "70,70,70,220",
+                    "outline_width": "0.38",
                     "outline_width_unit": "MM",
                 }
             )
