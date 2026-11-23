@@ -61,6 +61,7 @@ with rasterio.open(tmp) as src:
     )
     with rasterio.open(OUT_TIF, "w", **out_profile) as dst:
         dst.write(clipped[0], 1)
+        dst.set_band_description(1, "NDVI")
 
 valid = clipped[0][np.isfinite(clipped[0])]
 print("NDVI clipped to study wards")

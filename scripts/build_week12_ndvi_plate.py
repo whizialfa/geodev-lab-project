@@ -23,7 +23,6 @@ from qgis.core import (  # noqa: E402
     QgsLayoutExporter,
     QgsLayoutItem,
     QgsLayoutItemLabel,
-    QgsLayoutItemLegend,
     QgsLayoutItemMap,
     QgsLayoutItemPicture,
     QgsLayoutItemScaleBar,
@@ -31,8 +30,6 @@ from qgis.core import (  # noqa: E402
     QgsLayoutMeasurement,
     QgsLayoutPoint,
     QgsLayoutSize,
-    QgsLegendRenderer,
-    QgsLegendStyle,
     QgsPalLayerSettings,
     QgsPointXY,
     QgsPrintLayout,
@@ -202,25 +199,20 @@ def _ward_labels(layer: QgsVectorLayer) -> None:
     settings.setUnplacedVisibility(Qgis.UnplacedLabelVisibility.NeverShow)
     settings.placementSettings().setOverlapHandling(Qgis.LabelOverlapHandling.AllowOverlapAtNoCost)
     fmt = QgsTextFormat()
-    font = QFont("Helvetica", 14, QFont.Bold)
+    font = QFont("Helvetica", 12, QFont.Bold)
     fmt.setFont(font)
-    fmt.setSize(14)
+    fmt.setSize(12)
     fmt.setSizeUnit(QgsUnitTypes.RenderPoints)
     fmt.setColor(QColor(20, 20, 20))
     buf = QgsTextBufferSettings()
     buf.setEnabled(True)
-    buf.setSize(0.35)
+    buf.setSize(0.15)
     buf.setSizeUnit(QgsUnitTypes.RenderMillimeters)
-    buf.setColor(QColor(252, 248, 240))
+    buf.setColor(QColor(255, 255, 255))
     fmt.setBuffer(buf)
+    # No cream pill — thin white halo only.
     bg = QgsTextBackgroundSettings()
-    bg.setEnabled(True)
-    bg.setType(QgsTextBackgroundSettings.ShapeRectangle)
-    bg.setFillColor(QColor(252, 248, 240, 170))
-    bg.setStrokeWidth(0)
-    bg.setSizeType(QgsTextBackgroundSettings.SizeBuffer)
-    bg.setSize(QSizeF(0.35, 0.18))
-    bg.setRadii(QSizeF(0.4, 0.4))
+    bg.setEnabled(False)
     fmt.setBackground(bg)
     settings.setFormat(fmt)
     pins = ",".join(f"'{n}'" for n in PINNED)
@@ -255,58 +247,69 @@ def _style_ndvi(layer: QgsRasterLayer) -> None:
     layer.setOpacity(0.88)
 
 
-def _legend(layout, map_item, ndvi, wards) -> QgsLayoutItemLegend:
-    legend = QgsLayoutItemLegend(layout)
-    legend.setLinkedMap(map_item)
-    legend.setTitle(LEGEND_TITLE)
-    legend.setTitleAlignment(Qt.AlignLeft)
-    legend.setStyleFont(QgsLegendStyle.Title, QFont("Arial", 13, QFont.Bold))
-    legend.setStyleFont(QgsLegendStyle.Subgroup, QFont("Arial", 11))
-    legend.setStyleFont(QgsLegendStyle.SymbolLabel, QFont("Arial", 12))
-    legend.setFontColor(QColor(0, 0, 0))
-    legend.setSymbolWidth(4.8)
-    legend.setSymbolHeight(3.6)
-    legend.setBoxSpace(2.5)
-    legend.setColumnSpace(0)
-    legend.setLineSpacing(0.05)
-    legend.setStyleMargin(QgsLegendStyle.Title, QgsLegendStyle.Bottom, 0.8)
-    legend.setStyleMargin(QgsLegendStyle.Symbol, 0.15)
-    legend.setStyleMargin(QgsLegendStyle.SymbolLabel, QgsLegendStyle.Left, 1.0)
-    legend.setStyleMargin(QgsLegendStyle.Group, QgsLegendStyle.Top, 0.4)
-    legend.setFrameEnabled(True)
-    legend.setFrameStrokeColor(QColor(0, 0, 0))
-    legend.setFrameStrokeWidth(QgsLayoutMeasurement(0.45, MM))
-    legend.setBackgroundColor(QColor(255, 255, 255))
-    legend.setBackgroundEnabled(True)
-    legend.setAutoUpdateModel(False)
-    root = legend.model().rootGroup()
-    for child in list(root.children()):
-        root.removeChildNode(child)
-    # NDVI classes only; ward lines stay on the map without a legend row.
-    node = root.addLayer(ndvi)
-    QgsLegendRenderer.setNodeLegendStyle(node, QgsLegendStyle.Hidden)
-    legend.setZValue(20)
-    layout.addLayoutItem(legend)
-    pad = float(legend.boxSpace())
-    rows = 5
-    target_w = 42.0
-    target_h = 2.0 * pad + 5.5 + rows * (float(legend.symbolHeight()) + 0.85)
-    legend.setResizeToContents(True)
-    legend.setReferencePoint(QgsLayoutItem.UpperLeft)
-    legend.attemptMove(QgsLayoutPoint(14.0, 200.0, MM))
-    legend.attemptResize(QgsLayoutSize(target_w, target_h, MM))
-    legend.refresh()
-    legend.adjustBoxSize()
-    measured = legend.sizeWithUnits()
-    mw, mh = float(measured.width()), float(measured.height())
-    w = mw if 32.0 <= mw <= target_w + 6.0 else target_w
-    h = mh if 22.0 <= mh <= target_h + 3.0 else target_h
-    legend.setResizeToContents(False)
-    legend.setReferencePoint(QgsLayoutItem.LowerLeft)
-    legend.attemptResize(QgsLayoutSize(w, h, MM))
-    legend.attemptMove(QgsLayoutPoint(14.0, 283.0, MM))
-    print(f"  legend measured {mw:.1f}×{mh:.1f} mm → {w:.1f}×{h:.1f} mm")
-    return legend
+NDVI_CLASSES = [
+    (QColor(215, 48, 39), "≤ 0"),
+    (QColor(254, 224, 139), "0–0.2"),
+    (QColor(166, 217, 106), "0.2–0.4"),
+    (QColor(26, 152, 80), "0.4–0.6"),
+    (QColor(0, 104, 55), "> 0.6"),
+]
+
+
+def _legend(layout) -> QgsLayoutItemShape:
+    """Hand-built legend: title + range rows only (no Band 1 / Gray noise)."""
+    inset = 2.5
+    sw, sh = 5.0, 3.8
+    row_gap = 1.0
+    title_h = 6.0
+    label_gap = 1.6
+    rows = len(NDVI_CLASSES)
+    inner_h = title_h + rows * sh + (rows - 1) * row_gap
+    # widest label "~0.2–0.4" ≈ 18 mm at 12 pt
+    box_w = inset + sw + label_gap + 18.0 + inset
+    box_h = inset + inner_h + inset
+    box_x, box_y = 14.0, 283.0 - box_h
+    panel = _white_box(layout, box_x, box_y, box_w, box_h)
+
+    title = QgsLayoutItemLabel(layout)
+    title.setText(LEGEND_TITLE)
+    title.setFont(QFont("Arial", 13, QFont.Bold))
+    title.setFontColor(QColor(0, 0, 0))
+    title.setHAlign(Qt.AlignLeft)
+    title.setVAlign(Qt.AlignVCenter)
+    title.setZValue(21)
+    _place(layout, title, box_x + inset, box_y + inset, box_w - 2 * inset, title_h)
+
+    y0 = box_y + inset + title_h
+    for i, (color, label) in enumerate(NDVI_CLASSES):
+        y = y0 + i * (sh + row_gap)
+        swatch = QgsLayoutItemShape(layout)
+        swatch.setShapeType(QgsLayoutItemShape.Rectangle)
+        swatch.setSymbol(
+            QgsFillSymbol.createSimple(
+                {
+                    "color": f"{color.red()},{color.green()},{color.blue()},255",
+                    "outline_color": "0,0,0,180",
+                    "outline_width": "0.2",
+                    "outline_width_unit": "MM",
+                }
+            )
+        )
+        swatch.setFrameEnabled(False)
+        swatch.setZValue(21)
+        _place(layout, swatch, box_x + inset, y, sw, sh)
+
+        lab = QgsLayoutItemLabel(layout)
+        lab.setText(label)
+        lab.setFont(QFont("Arial", 12))
+        lab.setFontColor(QColor(0, 0, 0))
+        lab.setHAlign(Qt.AlignLeft)
+        lab.setVAlign(Qt.AlignVCenter)
+        lab.setZValue(21)
+        _place(layout, lab, box_x + inset + sw + label_gap, y, 18.0, sh)
+
+    print(f"  legend {box_w:.1f}×{box_h:.1f} mm at ({box_x:.0f},{box_y:.0f})")
+    return panel
 
 
 def main() -> Path:
@@ -340,8 +343,8 @@ def main() -> Path:
             QgsFillSymbol.createSimple(
                 {
                     "color": "0,0,0,0",
-                    "outline_color": "70,70,70,220",
-                    "outline_width": "0.38",
+                    "outline_color": "40,40,40,255",
+                    "outline_width": "0.65",
                     "outline_width_unit": "MM",
                 }
             )
@@ -427,7 +430,7 @@ def main() -> Path:
     north.setZValue(20)
     _place(layout, north, 372, 10, 34, 42)
 
-    legend = _legend(layout, map_item, ndvi, wards)
+    legend = _legend(layout)
     leg_w = legend.sizeWithUnits().width()
 
     scale = QgsLayoutItemScaleBar(layout)
