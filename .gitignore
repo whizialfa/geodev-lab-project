@@ -1,11 +1,7 @@
 .venv/
 main.py
 *.tif
-*.TIF
-*.tiff
-*.TIFF
 *.zip
-data/raw/landsat/
 __pycache__/
 .DS_Store
 

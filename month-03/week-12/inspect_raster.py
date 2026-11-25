@@ -1,13 +1,16 @@
-"""Guided: inspect the teaching DEM (Ibadan North pack raster)."""
+"""Guided: open the teaching DEM and print its metadata."""
+from pathlib import Path
+
 import rasterio
 
-with rasterio.open("data/raw/dem.tif") as src:
-    print("Width x height:", src.width, "x", src.height)
-    print("Bands:", src.count)
-    print("Data type:", src.dtypes)
-    print("CRS:", src.crs)
-    print("Pixel size:", src.res)
-    print("Bounds:", src.bounds)
-    print("Nodata:", src.nodata)
-    print("Transform:")
-    print(src.transform)
+DEM = Path("data/raw/week12/dem.tif")
+
+with rasterio.open(DEM) as src:
+    print("size:", src.width, "x", src.height, "bands:", src.count)
+    print("dtype:", src.dtypes[0])
+    print("crs:", src.crs, "| epsg:", src.crs.to_epsg())
+    print("nodata:", src.nodata)
+    print("cell size:", src.res)
+    print("bounds:", src.bounds)
+    print("transform:", src.transform)
+    print("meta keys:", sorted(src.meta))

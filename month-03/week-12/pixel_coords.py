@@ -1,8 +1,13 @@
-"""Guided: pixel centre and row/col for a map location on the teaching DEM."""
+"""Guided: convert between map coordinates and row/column."""
+from pathlib import Path
+
 import rasterio
 
-with rasterio.open("data/raw/dem.tif") as src:
-    x, y = src.xy(0, 0)
-    print("Centre of top-left pixel:", round(x, 1), round(y, 1))
-    row, col = src.index(600000, 820000)
-    print("That location is row", row, "column", col)
+DEM = Path("data/raw/week12/dem.tif")
+
+with rasterio.open(DEM) as src:
+    row, col = src.index(776000, 1455000)
+    print("row, col:", row, col)
+    x_centre, y_centre = src.xy(row, col)
+    print("cell centre:", x_centre, y_centre)
+    print("elevation there:", round(float(src.read(1)[row, col]), 1))

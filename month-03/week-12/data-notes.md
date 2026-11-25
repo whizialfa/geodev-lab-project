@@ -1,27 +1,26 @@
 # Week 12 raster notes
 
-Rasters stay on this laptop (root `.gitignore`). Nothing below is committed as a GeoTIFF.
+Rasters stay on this laptop (see root `.gitignore` for `*.tif`). Nothing below is committed as a GeoTIFF.
 
-## Teaching set (Month 3 learning pack — Ibadan North)
+## Teaching set (`data/raw/week12/`)
 
-| File | What it is | Notes |
-|---|---|---|
-| `data/raw/dem.tif` | Pack DEM, 241×315, 30 m, EPSG:32631, nodata −9999 | Used by inspect / read / pixel / sample / clip / zonal / reproject |
-| `data/processed/wards.gpkg` | 12 Ibadan North wards (`ward_name`) | Week 10 teaching wards; CRS EPSG:4326 |
-| `data/processed/facilities.gpkg` | 41 teaching facilities | Sampled for elevation in `sample_points.py` |
-| `data/raw/landsat/LC09_L2SP_191055_20260115_20260117_02_T1_SR_B4.TIF` | Landsat-9 C2 L2 red | Pack scene window |
-| `data/raw/landsat/LC09_L2SP_191055_20260115_20260117_02_T1_SR_B5.TIF` | Landsat-9 C2 L2 NIR | Same scene |
-| `data/processed/ndvi.tif` | Guided NDVI (`ndvi.py`) | Local output |
-| `data/processed/dem_ibadan_north.tif` | DEM clipped to wards | From `clip_raster.py` |
-| `data/processed/dem_wgs84.tif` | DEM in EPSG:4326 | From `reproject_raster.py` |
+| File | What it is | CRS | Notes |
+|---|---|---|---|
+| `dem.tif` | Synthetic 400×400 DEM, 30 m cells | EPSG:32643 | Nodata −9999 in a NE patch; used by inspect / read / sample / clip / zonal / reproject |
+| `scene.tif` | Synthetic 2-band red+NIR scene, 10 m | EPSG:32643 | Float reflectance already; used by `ndvi.py` |
+| `ndvi.tif` | Teaching NDVI written by `ndvi.py` | EPSG:32643 | Local output only |
+| `dem_cut.tif` | DEM clipped to a 2.5 km circle | EPSG:32643 | Written by `clip_raster.py` |
+| `dem_wgs84.tif` | DEM reprojected to lon/lat | EPSG:4326 | Written by `reproject_raster.py` |
+| `districts.gpkg` | Two rectangle districts (vector) | EPSG:32643 | Committed if small; used by guided zonal |
 
-**Pack scene:** LC09_L2SP_191055_20260115_20260117_02_T1 · date **2026-01-15** · path/row **191/055** · scale `DN × 0.0000275 − 0.2`.
+## My AMAC set (`data/raw/week12_amac/`)
 
-## Challenge set (my AMAC project)
+| File | What it is | Source | Notes |
+|---|---|---|---|
+| `B4_red.tif` | Landsat-9 C2 L2 Band 4 (red), windowed to study wards | Planetary Computer STAC `landsat-c2-l2` | Scene **LC09_L2SP_189054_20241108_02_T1**, date **2024-11-08**, cloud cover **0.0%**, WRS 189/054, CRS EPSG:32632 |
+| `B5_nir.tif` | Landsat-9 C2 L2 Band 5 (NIR) | same scene | Same window and CRS as B4 |
+| `ndvi_amac.tif` | NDVI = (NIR−Red)/(NIR+Red) after scale 0.0000275 and offset −0.2, **masked to the ten study ward polygons** | computed by `my_index.py` | Local output; outside wards is nodata |
+| `dem_amac.tif` | Copernicus GLO-30 DEM mosaic clipped to ward bbox | Planetary Computer `cop-dem-glo-30` | EPSG:4326; inspected in `my_inspect.py` |
+| `scene_meta.json` | Scene id, date, cloud cover | STAC properties | Helper; not required for marking |
 
-| File | What it is | Notes |
-|---|---|---|
-| `data/raw/week12_amac/B4_red.tif` | Landsat-9 red, windowed to study wards | Scene **LC09_L2SP_189054_20241108_02_T1**, date **2024-11-08**, cloud **0.0%**, EPSG:32632 |
-| `data/raw/week12_amac/B5_nir.tif` | Landsat-9 NIR | Same scene |
-| `data/raw/week12_amac/ndvi_amac.tif` | NDVI clipped to the ten AMAC study ward polygons | From `my_index.py` |
-| `data/raw/week12_amac/dem_amac.tif` | Copernicus GLO-30 DEM | Inspected in `my_inspect.py` |
+Scale/offset for Collection 2 Level-2 surface reflectance: `reflectance = DN × 0.0000275 − 0.2` (USGS). Convert to `float32` before applying.

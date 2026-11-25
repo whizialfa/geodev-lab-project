@@ -1,33 +1,25 @@
-"""Guided: NDVI from the pack Landsat-9 red and NIR bands (Ibadan North)."""
+"""Guided: compute NDVI from the teaching two-band scene and save a GeoTIFF."""
+from pathlib import Path
+
 import numpy as np
 import rasterio
 
-folder = "data/raw/landsat/"
-scene = "LC09_L2SP_191055_20260115_20260117_02_T1"
+SCENE = Path("data/raw/week12/scene.tif")
+OUT = Path("data/raw/week12/ndvi.tif")
 
-with rasterio.open(folder + scene + "_SR_B4.TIF") as src:
-    red_raw = src.read(1).astype("float32")
-    profile = src.profile
+with rasterio.open(SCENE) as src:
+    print("bands:", src.count, "descriptions:", src.descriptions)
+    red = src.read(1).astype("float32")
+    nir = src.read(2).astype("float32")
+    profile = src.profile.copy()
 
-with rasterio.open(folder + scene + "_SR_B5.TIF") as src:
-    nir_raw = src.read(1).astype("float32")
-
-valid = (red_raw > 0) & (nir_raw > 0)
-red = red_raw * 0.0000275 - 0.2
-nir = nir_raw * 0.0000275 - 0.2
-
-ndvi = np.full(red.shape, -9999, dtype="float32")
 total = nir + red
-ok = valid & (total != 0)
-ndvi[ok] = (nir[ok] - red[ok]) / total[ok]
+ndvi = np.where(total == 0, np.nan, (nir - red) / np.where(total == 0, 1, total))
 
-low = round(float(ndvi[ok].min()), 3)
-high = round(float(ndvi[ok].max()), 3)
-print("NDVI range:", low, "to", high)
-print("Mean NDVI:", round(float(ndvi[ok].mean()), 3))
+print("NDVI range:", round(float(np.nanmin(ndvi)), 2), "to", round(float(np.nanmax(ndvi)), 2))
+print("share of cells with NDVI above 0.5:", round(float(np.nanmean(ndvi > 0.5)) * 100, 1), "percent")
 
-profile.update(dtype="float32", nodata=-9999, count=1)
-with rasterio.open("data/processed/ndvi.tif", "w", **profile) as dst:
-    dst.write(ndvi, 1)
-
-print("Saved data/processed/ndvi.tif")
+profile.update(count=1, dtype="float32", nodata=np.nan, compress="lzw")
+with rasterio.open(OUT, "w", **profile) as dst:
+    dst.write(ndvi.astype("float32"), 1)
+print("wrote", OUT)
